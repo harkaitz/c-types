@@ -6,11 +6,12 @@ CC          =gcc
 CFLAGS      =-Wall -g
 CPPFLAGS    =
 LIBS        =
-HEADERS_STR =$(shell find include/str -iregex '.*\.h')
-MARKDOWNS   =$(shell find doc         -iregex '.*\.md')
-MANPAGES_3  =$(shell find doc         -iregex '.*\.3')
-PROGRAMS_S  =$(shell find tools       -iregex '.*\.c')
-HEADERS     =$(HEADERS_STR)
+HEADERS_STR =$(shell find include/str   -iregex '.*\.h')
+HEADERS_TYP =$(shell find include/types -iregex '.*\.h')
+MARKDOWNS   =$(shell find doc           -iregex '.*\.md')
+MANPAGES_3  =$(shell find doc           -iregex '.*\.3')
+PROGRAMS_S  =$(shell find tools         -iregex '.*\.c')
+HEADERS     =$(HEADERS_STR) $(HEADERS_TYP)
 PROGRAMS    =$(patsubst %.c,%,$(PROGRAMS_S))
 CFLAGS_ALL  =$(LDFLAGS) $(CFLAGS) $(CPPFLAGS)
 ## Help string.
@@ -34,6 +35,9 @@ install:
 	install -m644 $(MANPAGES_3)  $(DESTDIR)$(PREFIX)/share/man/man3
 	install -d                   $(DESTDIR)$(PREFIX)/include/str
 	install -m644 $(HEADERS_STR) $(DESTDIR)$(PREFIX)/include/str
+	install -d                   $(DESTDIR)$(PREFIX)/include/types
+	install -m644 $(HEADERS_TYP) $(DESTDIR)$(PREFIX)/include/types
+
 clean:
 	rm -f $(PROGRAMS)
 ssnip:
