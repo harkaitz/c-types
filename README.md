@@ -5,6 +5,8 @@ Collection of types for C.
 ## Header files (You can copy these to your project)
 
 + [str/trim.h](include/str/trim.h) : The very basic trim function for C. [manpage](doc/trim.3.md).
++ [types/email.h](include/types/email.h)
++ [types/password.h](include/types/password.h)
 
 ## Collaborating
 
