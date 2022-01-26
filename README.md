@@ -13,6 +13,8 @@ Collection of types for C.
 + [types/long_ss.h](include/types/long_ss.h) : [manpage](doc/long_ss.3.md)
 + [types/time_ss.h](include/types/time_ss.h) : [manpage](doc/time_ss.3.md)
 + [types/uuid_ss.h](include/types/uuid_ss.h) : [manpage](doc/uuid_ss.3.md)
++ [io/prompt.h](include/io/prompt.h) : [manpage](doc/prompt.3.md)
++ [io/fgetpw.h](include/io/fgetpw.h) : [manpage](doc/fgetpw.3.md)
 
 ## Collaborating
 

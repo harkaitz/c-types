@@ -1,3 +1,4 @@
 tools/trim
 tools/valid-email
 tools/valid-password
+tools/prompt
