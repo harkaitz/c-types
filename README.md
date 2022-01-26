@@ -15,6 +15,7 @@ Collection of types for C.
 + [types/uuid_ss.h](include/types/uuid_ss.h) : [manpage](doc/uuid_ss.3.md)
 + [io/prompt.h](include/io/prompt.h) : [manpage](doc/prompt.3.md)
 + [io/fgetpw.h](include/io/fgetpw.h) : [manpage](doc/fgetpw.3.md)
++ [io/mconfig.h](include/io/mconfig.h) : [manpage](doc/mconfig.3.md)
 
 ## Collaborating
 
