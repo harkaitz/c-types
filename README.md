@@ -7,7 +7,11 @@ Collection of types for C.
 + [str/trim.h](include/str/trim.h) : The very basic trim function for C. [manpage](doc/trim.3.md).
 + [types/email.h](include/types/email.h) : [manpage](doc/email.3.md)
 + [types/password.h](include/types/password.h) : [manpage](doc/password.3.md)
-+ [types/uuid_ss.h](include/types/uuid_ss.h) :
++ [types/bool_ss.h](include/types/bool_ss.h) : [manpage](doc/bool_ss.3.md)
++ [types/coin.h](include/types/coin.h) : [manpage](doc/coin.3.md)
++ [types/long_ss.h](include/types/long_ss.h) : [manpage](doc/long_ss.3.md)
++ [types/time_ss.h](include/types/time_ss.h) : [manpage](doc/time_ss.3.md)
++ [types/uuid_ss.h](include/types/uuid_ss.h) : [manpage](doc/uuid_ss.3.md)
 
 ## Collaborating
 
