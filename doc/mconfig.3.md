@@ -10,10 +10,9 @@ mconfig_set(),mconfig_printf(),mconfig_require()
     mconfig_t MCONFIG_INITIALIZER(void);
     
     void mconfig_cleanup (mconfig_t *_m);
-    bool mconfig_search  (mconfig_t *_m, mconfig_field_t **_opt_f, const char _var[]);
-    bool mconfig_load    (mconfig_t *_m, const char _filename[], bool _no_err_if_not_found);
+    bool mconfig_add     (mconfig_t *_m, ...);
+    bool mconfig_load    (mconfig_t *_m, const char _filename[], bool _success_if_not_found);
     cstr mconfig_get     (mconfig_t *_m, const char _var[], const char _def[]);
-    bool mconfig_set     (mconfig_t *_m, const char _var[], const char _val[]);
     int  mconfig_printf  (mconfig_t *_m, FILE *_f, const char _cfg[], ...);
     bool mconfig_require (mconfig_t *_m, ...);
 

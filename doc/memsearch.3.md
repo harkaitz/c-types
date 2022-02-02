@@ -1,17 +1,20 @@
 # NAME
 
-prompt_fgets(), prompt_fgetpw()
+memsearch()
 
 # SYNOPSIS
 
-    #include <io/prompt.h>
-    char *prompt_fgets  (const char _prompt[], char _b[], size_t _blen);
-    char *prompt_fgetpw (const char _prompt[], char _b[], size_t _blen);
+    #include <str/memsearch.h>
+    
+    size_t memsearch(const char _m[], size_t _msz, const char _s[], bool _shift);
 
 # DESCRIPTION
 
-Prompt a message (if prompt not null and stdin is a tty) and read a line. The trailing
-newline is removed. Requires all the precautions as *fgets(3)*.
+Search a string in a memory block.
+
+# RETURN VALUE
+
+Returns the position in the buffer if found, otherwise returns -1.
 
 # COLLABORATING
 
@@ -25,4 +28,4 @@ making pull requests or making a donation.
 
 # SEE ALSO
 
-**FGETS(3)**, **PROMPT(3)**
+**MEMMEM(3)**

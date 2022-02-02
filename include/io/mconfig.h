@@ -9,87 +9,86 @@
 #include <syslog.h>
 #include <stdarg.h>
 
+#define MCONFIG_LIMIT 100
+
 typedef struct mconfig_s       mconfig_t;
-typedef struct mconfig_field_s mconfig_field_t;
 
 struct mconfig_s {
-    mconfig_field_t *l;
-};
-
-struct mconfig_field_s {
-    mconfig_field_t *next;
-    char            *val;
-    char             var[1];
+    const char *v[MCONFIG_LIMIT];
+    size_t      vsz;
 };
 
 #define MCONFIG_INITIALIZER() {0}
 
 static __attribute__((unused)) void
 mconfig_cleanup(mconfig_t *_m) {
-    for(mconfig_field_t *e = _m->l,*n; e; e=n) {
-        if (e->val) free(e->val);
-        n = e->next;
-        free(e);
+    for (size_t i=0; i<_m->vsz; i++) {
+        free((void*)_m->v[i]);
     }
-    memset(_m, 0, sizeof(mconfig_t));
+    _m->vsz=0;
 }
 
 static __attribute__((unused)) bool
-mconfig_search(mconfig_t *_m, mconfig_field_t **_opt_f, const char _var[]) {
-    for(mconfig_field_t *e = _m->l; e; e=e->next) {
-        if (!strcasecmp(e->var, _var)) {
-            if (_opt_f) *_opt_f = e;
+mconfig_search(mconfig_t *_m, size_t *_opt_var, size_t *_opt_val, const char _var[]) {
+    for(size_t i=0; i<_m->vsz; i+=2) {
+        if (_m->v[i] && _m->v[i+1] && !strcasecmp(_var, _m->v[i])) {
+            if (_opt_var) *_opt_var = i;
+            if (_opt_val) *_opt_val = i+1;
             return true;
         }
     }
     return false;
 }
 
+static __attribute__((unused, sentinel)) bool
+mconfig_add(mconfig_t *_m, ...) {
+    bool    retval = false;
+    va_list va;
+    va_start(va, _m);
+    while (1) {
+        if (_m->vsz >= (MCONFIG_LIMIT-5)) goto fail_too_much_settings;
+        const char *var = va_arg(va, const char *); if (!var) break;
+        const char *val = va_arg(va, const char *); if (!val) break;
+        char *var_m = strdup(var);
+        if (!var_m) goto fail_errno;
+        char *val_m = strdup(val);
+        if (!val_m) goto fail_errno;
+        _m->v[_m->vsz++] = var_m;
+        _m->v[_m->vsz++] = val_m;
+        _m->v[_m->vsz]   = NULL;
+    }
+    retval = true;
+ cleanup:
+    va_end(va);
+    return retval;
+ fail_errno:
+    syslog(LOG_ERR, "%s", strerror(errno));
+    goto cleanup;
+ fail_too_much_settings:
+    syslog(LOG_ERR, "Too much settings.");
+    goto cleanup;
+}
+
 static __attribute__((unused)) bool
-mconfig_load(mconfig_t *_m, const char _filename[], bool _no_err_if_not_found) {
+mconfig_load(mconfig_t *_m, const char _filename[], bool _success_if_not_found) {
     bool               retval   = false;
     FILE              *fp       = NULL;
     char               b[1024]  = {0};
-    int                line     = 0;
+    int                ln       = 0;
     char              *l,*_l,*c1,*c2;
-    mconfig_field_t   *f;
-
-    /* Open file. */
-    fp = fopen(_filename, "rb");
-    if (fp == NULL && errno == ENOENT && _no_err_if_not_found) {
+    fp = fopen(_filename, "r");
+    if (fp == NULL && errno == ENOENT && _success_if_not_found) {
         return true;
     }
-    if (!fp) goto fail_errno;
-    /* Read options. */
-    for (line=1; (l = fgets(b, sizeof(b)-1, fp)); line++) {
-        /* Remove comments. */
-        if ((c1 = strchr(l, '#'))) {
-            *c1 = '\0';
-        }
-        /* Get variable name. Skip empty lines. */
-        c1 = strtok_r(l, " \t\n", &_l);
-        if (!c1) {
-            continue;
-        }
-        /* Get value. */
+    if (!fp/*err*/) { goto fail_errno; }
+    for (ln=1; (l = fgets(b, sizeof(b)-1, fp)); ln++) {
+        if ((c1 = strchr(l, '#'))) *c1 = '\0';
+        if (!(c1 = strtok_r(l, " \t\n", &_l))) continue;
         c2 = strtok_r(0, " \t\n", &_l);
         if (!c2/*err*/) goto fail_no_value;
-        /* Search previous variable, skip if it exists. */
-        if (mconfig_search(_m, &f, c1)) {
-            continue;
-        }
-        /* Allocate memory. */
-        c2 = strdup(c2);
-        if (!c2/*err*/) goto fail_errno;
-        f = malloc(sizeof(mconfig_field_t)+strlen(c1)+1);
-        if (!f/*err*/) { free(c2); goto fail_errno; }
-        strcpy(f->var, c1);
-        f->val = c2;
-        /* Add to list. */
-        f->next = _m->l;
-        _m->l = f;
+        if (mconfig_search(_m, NULL, NULL, c1)) continue;
+        if (!mconfig_add(_m, c1, c2, NULL)) goto cleanup;
     }
-    /* Cleanup. */
     retval = true;
  cleanup:
     if (fp) fclose(fp);
@@ -98,37 +97,14 @@ mconfig_load(mconfig_t *_m, const char _filename[], bool _no_err_if_not_found) {
     syslog(LOG_ERR, "%s: %s", _filename, strerror(errno));
     goto cleanup;
  fail_no_value:
-    syslog(LOG_ERR, "%s: %-3i: %s", _filename, line, strerror(errno));
+    syslog(LOG_ERR, "%s: %-3i: %s", _filename, ln, strerror(errno));
     goto cleanup;
 }
 
 static __attribute__((unused)) const char *
 mconfig_get(mconfig_t *_m, const char _var[], const char _def[]) {
-    mconfig_field_t *f;
-    return (mconfig_search(_m, &f, _var))?f->val:_def;
-}
-
-static __attribute__((unused)) bool
-mconfig_set(mconfig_t *_m, const char _var[], const char _val[]) {
-    char            *v = NULL;
-    mconfig_field_t *f = NULL;
-    if (!_val) return true;
-    v = strdup(_val);
-    if (!v/*err*/) goto fail_errno;
-    if (mconfig_search(_m, &f, _var)) {
-        f->val = v;
-    } else {
-        f = malloc(sizeof(mconfig_field_t)+strlen(_var)+1);
-        if (!f/*err*/) { free(v); goto fail_errno; }
-        strcpy(f->var, _var);
-        f->val = v;
-        f->next = _m->l;
-        _m->l = f;
-    }
-    return true;
- fail_errno:
-    syslog(LOG_ERR, "%s", strerror(errno));
-    return false;
+    size_t f;
+    return (mconfig_search(_m, NULL, &f, _var))?_m->v[f]:_def;
 }
 
 static __attribute__((unused, sentinel)) int
@@ -153,7 +129,7 @@ mconfig_require(mconfig_t *_m, ...) {
     while (1) {
         if (!(var=va_arg(va, const char*)) || !(help = va_arg(va, const char*))) {
             break;
-        } else if (!mconfig_search(_m, NULL, var)) {
+        } else if (!mconfig_search(_m, NULL, NULL, var)) {
             syslog(LOG_ERR, "Config '%s' not set: %s", var, help);
             break;
         }

@@ -1,17 +1,21 @@
 # NAME
 
-prompt_fgets(), prompt_fgetpw()
+pathsearch()
 
 # SYNOPSIS
 
-    #include <io/prompt.h>
-    char *prompt_fgets  (const char _prompt[], char _b[], size_t _blen);
-    char *prompt_fgetpw (const char _prompt[], char _b[], size_t _blen);
+    #include <sys/pathsearch.h>
+    
+    bool pathsearch(const char _path[],
+                    char       _sep,
+                    const char _name[],
+                    char     **_o);
 
 # DESCRIPTION
 
-Prompt a message (if prompt not null and stdin is a tty) and read a line. The trailing
-newline is removed. Requires all the precautions as *fgets(3)*.
+Search executable named *_name* in a directory list in *_path* separated by *_sep*. The
+result is stored in *_o* and must be freed with *free()*. It returns *true* on
+success and *false* in case of error.
 
 # COLLABORATING
 
@@ -23,6 +27,3 @@ making pull requests or making a donation.
 - *Binance* : _bnb194ay2cy83jjp644hdz8vjgjxrj5nmmfkngfnul_
 - *Monero* : _88JP1c94kDEbyddN4NGU574vwXHB6r3FqcFX9twmxBkGNSnf64c5wjE89YaRVUk7vBbdnecWSXJmRhFWUcLcXUTFJVddZti_
 
-# SEE ALSO
-
-**FGETS(3)**, **PROMPT(3)**

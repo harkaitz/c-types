@@ -1,4 +1,9 @@
-tools/trim
 tools/valid-email
 tools/valid-password
+tools/urlencode
+tools/trim
+tools/sdate
 tools/prompt
+tools/pathsearch
+tools/fcopy
+tools/mconfig
