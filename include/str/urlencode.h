@@ -94,32 +94,56 @@ int urlencode_fmt_f(FILE *_fp, const char *_fmt, ...) {
     return r;
 }
 
-
-
 static __attribute__((unused)) /* Returns same as urlencode_fmt_fv(). */
-int urlencode_post_f(FILE *_fp, const char *_fmt, ...) {
+int urlencode_post_fv(FILE *_fp, bool _is_url, const char *_fmt, va_list va) {
+    bool    is_url = _is_url;
     size_t  fmtsz = strlen(_fmt)+1;
     char    fmt[fmtsz];
     char   *p1,*p2,c;
     int     res = 0, shift;
-    va_list va;
     memcpy(fmt, _fmt, fmtsz);
-    va_start(va, _fmt);
     for (p1=fmt, p2=fmt, c=*p2; 1; p2++, c=*p2) {
-        if (c=='='||c=='&'||c=='\0') { 
+        if (is_url) {
+            if (c=='?'||c=='\0') {
+                *p2 = '\0';
+                shift = vfprintf(_fp, p1, va);
+                if (shift < 0/*err*/) { res = -1; break; }
+                res += shift;
+                if (c!='\0') {
+                    shift = fputc(c, _fp);
+                    if (shift==EOF/*err*/) { res = -1; break; }
+                    res += 1;
+                    p1 = p2+1;
+                }
+                is_url = false;
+            }
+        } else if (c=='='||c=='&'||c=='\0'||c=='?') { 
             *p2 = '\0';
             shift = urlencode_fmt_fv(_fp, p1, va);
             if (shift < 0/*err*/) { res = -1; break; }
             res += shift;
-            shift = fputc(c, _fp);
-            if (shift==EOF/*err*/) { res = -1; break; }
-            p1 = p2+1;
+            if (c!='\0') {
+                shift = fputc(c, _fp);
+                if (shift==EOF/*err*/) { res = -1; break; }
+                res += 1;
+                p1 = p2+1;
+            }
         }
         if (c=='\0') break;
     }
-    va_end(va);
     return res;
 }
+
+static __attribute__((unused)) /* Returns same as urlencode_fmt_fv(). */
+int urlencode_post_f(FILE *_fp, bool _is_url, const char *_fmt, ...) {
+    va_list va;
+    va_start(va, _fmt);
+    int r = urlencode_post_fv(_fp, _is_url, _fmt, va);
+    va_end(va);
+    return r;
+}
+
+
 
 #endif
 /**l*

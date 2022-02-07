@@ -131,8 +131,13 @@ coin_parse (coin_t *_opt_out, const char _value[], coin_err_e *_opt_reason) {
     /* Set coin. */
     if (_opt_out) {
         _opt_out->cents = (n1*100)+n2;
+        if (currency[0]=='-') {
+            currency++;
+        }
         if (!strcmp(currency,"€")) {
             strcpy(_opt_out->currency, "eur");
+        } else if (!strcmp(currency,"$")) {
+            strcpy(_opt_out->currency, "usd");
         } else {
             strcpy(_opt_out->currency, currency);
         }

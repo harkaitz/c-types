@@ -1,23 +1,20 @@
 # NAME
 
-pathsearch()
+findent(), fprintf_i()
 
 # SYNOPSIS
 
-    #include <sys/pathsearch.h>
+    #include <io/findent.h>
     
-    #define PATH_SEP ':'(unix)';'(windows)
-    
-    bool pathsearch(const char _path[],
-                    char       _sep,
-                    const char _name[],
-                    char     **_o);
+    void findent   (FILE *_fp, int _shift);
+    int  fprintf_i (FILE *_fp, const char _fmt[], ...);
 
 # DESCRIPTION
 
-Search executable named *_name* in a directory list in *_path* separated by *_sep*. The
-result is stored in *_o* and must be freed with *free()*. It returns *true* on
-success and *false* in case of error.
+This header has some auxiliary functions for terminal input and output.
+
+Both *findent()* and *fprintf_i()* are used to print indented output. You shall
+not put a newline in *fprintf_i()*.
 
 # COLLABORATING
 

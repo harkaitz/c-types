@@ -120,23 +120,7 @@ mconfig_printf(mconfig_t *_m, FILE *_f, const char _cfg[], ...) {
     return r;
 }
 
-static __attribute__((unused, sentinel)) bool
-mconfig_require(mconfig_t *_m, ...) {
-    bool          ret = true;
-    const char   *var,*help;
-    va_list       va;
-    va_start(va, _m);
-    while (1) {
-        if (!(var=va_arg(va, const char*)) || !(help = va_arg(va, const char*))) {
-            break;
-        } else if (!mconfig_search(_m, NULL, NULL, var)) {
-            syslog(LOG_ERR, "Config '%s' not set: %s", var, help);
-            break;
-        }
-    }
-    va_end(va);
-    return ret;
-}
+
 
 #endif
 /**l*

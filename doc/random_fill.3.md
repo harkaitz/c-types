@@ -1,23 +1,19 @@
 # NAME
 
-pathsearch()
+random_fill(), ALPHABET, HEXADECIMAL
 
 # SYNOPSIS
 
-    #include <sys/pathsearch.h>
-    
-    #define PATH_SEP ':'(unix)';'(windows)
-    
-    bool pathsearch(const char _path[],
-                    char       _sep,
-                    const char _name[],
-                    char     **_o);
+    #include <str/random_fill.h>
+
+    char *random_fill(char *out, int len, const char *comp);
+
+    #define ALPHABET    "abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"
+    #define HEXADECIMAL "0123456789abcdef"
 
 # DESCRIPTION
 
-Search executable named *_name* in a directory list in *_path* separated by *_sep*. The
-result is stored in *_o* and must be freed with *free()*. It returns *true* on
-success and *false* in case of error.
+Fill a string with random characters. A null character is inserted.
 
 # COLLABORATING
 
@@ -29,3 +25,6 @@ making pull requests or making a donation.
 - *Binance* : _bnb194ay2cy83jjp644hdz8vjgjxrj5nmmfkngfnul_
 - *Monero* : _88JP1c94kDEbyddN4NGU574vwXHB6r3FqcFX9twmxBkGNSnf64c5wjE89YaRVUk7vBbdnecWSXJmRhFWUcLcXUTFJVddZti_
 
+# SEE ALSO
+
+**RANDOM(2)**

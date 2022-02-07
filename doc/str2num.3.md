@@ -23,7 +23,7 @@ solves this issue.
 
 # RETURN VALUE
 
-If not found it returns -1.
+If not found it returns -1, if *s* is null it returns -2.
 
 # COLLABORATING
 

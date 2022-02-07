@@ -14,7 +14,6 @@ mconfig_set(),mconfig_printf(),mconfig_require()
     bool mconfig_load    (mconfig_t *_m, const char _filename[], bool _success_if_not_found);
     cstr mconfig_get     (mconfig_t *_m, const char _var[], const char _def[]);
     int  mconfig_printf  (mconfig_t *_m, FILE *_f, const char _cfg[], ...);
-    bool mconfig_require (mconfig_t *_m, ...);
 
 # DESCRIPTION
 
@@ -31,7 +30,6 @@ Load a file with *mconfig_load()*. If a configuration was set previously then
 *mconfig_load()* will ignore it. This means you should call it the following
 order.
 
-    mconfig_load(&m, "~/.my-program.cfg"  , true);
     mconfig_load(&m, "/etc/my-program.cfg", true);
 
 You can get a configuration variable with *mconfig_get()* and change/set one
@@ -40,13 +38,9 @@ set ovewrite values many times, that would be a leak.
 
 You can write a configuration file with *mconfig_printf()*.
 
-You can require some configuration variables to be set with *mconfig_require()*:
-
-    mconfig_require(&m, "VAR1", "VAR2", NULL);
-
 # RETURN VALUE
 
-True on success, false on error. See *errmsg(3)*.
+True on success, false on error.
 
 # COLLABORATING
 

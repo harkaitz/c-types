@@ -18,7 +18,8 @@ urlencode_post_f()
     int urlencode_fmt_f  (FILE *_fp, const char *_fmt, ...);
     
     /* Prepare a post. */
-    int urlencode_post_f(FILE *_fp, const char *_fmt, ...);
+    int urlencode_post_fv(FILE *_fp, bool _is_url, const char *_fmt, va_list va);
+    int urlencode_post_f (FILE *_fp, bool _is_url, const char *_fmt, ...);
 
 # DESCRIPTION
 

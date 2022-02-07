@@ -19,12 +19,12 @@ struct authorization_s {
 __thread __attribute__((weak))
 struct authorization_s g_authorization[1];
 
-static __attribute__((unused))
+static inline
 void authorization_close (void) {
     memset(g_authorization, 0, sizeof(g_authorization));
 }
 
-static __attribute__((unused))
+static inline
 bool authorization_open(const char _username[]) {
     for (size_t i=0; _username[i]; i++) {
         if (strchr("/:\\\"'%$\n\r \t", _username[i])) {
@@ -39,7 +39,7 @@ bool authorization_open(const char _username[]) {
     return true;
 }
 
-static __attribute__((unused))
+static inline
 bool authorization_open_pam(pam_handle_t *_pam) {
     int pam_get_item(const pam_handle_t *pamh, int item_type, const void **item);
     const void *v;
@@ -51,7 +51,7 @@ bool authorization_open_pam(pam_handle_t *_pam) {
     return authorization_open(v);
 }
 
-static __attribute__((unused))
+static inline
 const char *authorization_get_username(void) {
     if (g_authorization->username[0]) {
         return g_authorization->username;

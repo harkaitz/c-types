@@ -58,4 +58,32 @@ ssize_t fcopy_fd(FILE *_to, int _fr, size_t _bsize, FILE *_opt_dots) {
     }
 }
 
+static __attribute__((unused))
+ssize_t fcopy_dd(int _to, int _fr, size_t _bsize, FILE *_opt_dots) {
+    size_t  bsize = (_bsize>0)?_bsize:1024;
+    char   *b     = malloc(bsize);
+    ssize_t ret  = 0;
+    ssize_t r    = 0;
+    ssize_t w    = 0;
+    if (!b/*err*/) return -1;
+    while (1) {
+        r = read(_fr, b, bsize);
+        if (r == -1/*err*/) break;
+        if (r) {
+            w = write(_to, b, r);
+            if (w==-1/*err*/) break;
+            ret += w;
+            if (_opt_dots) fputc('.', _opt_dots); 
+        }
+        if (!r) break;
+    }
+    if (_opt_dots) fputc('\n', _opt_dots); 
+    free(b);
+    if (r == -1 || w == -1) {
+        return -ret;
+    } else {
+        return ret;
+    }
+}
+
 #endif
