@@ -28,7 +28,6 @@ help:
 	@echo "all         : Build everything."
 	@echo "clean       : Clean files."
 	@echo "install     : Install all produced files."
-	@echo "ssnip       : Execute 'ssnip' on all files."
 
 ## Programs.
 all: $(PROGRAMS)
@@ -57,5 +56,3 @@ install:
 	install -m644 $(HEADERS_JANSSON) $(DESTDIR)$(PREFIX)/include/jansson
 clean:
 	rm -f $(PROGRAMS)
-ssnip:
-	ssnip LICENSE $(HEADERS) $(MARKDOWNS) $(PROGRAMS_S) $(MANPAGES_3) README.md
