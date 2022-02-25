@@ -7,3 +7,5 @@ tools/prompt
 tools/pathsearch
 tools/fcopy
 tools/mconfig
+deps.log
+tools/freplace

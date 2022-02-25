@@ -4,8 +4,12 @@
 #include <uuid/uuid.h>
 #include <string.h>
 #include <stdio.h>
+#include <syslog.h>
+#include <stdbool.h>
 
 #define UUID_SS_LENGTH 36
+#define UUID_SS_STORE alloca(UUID_SS_LENGTH+1)
+#define UUID_STORE alloca(sizeof(uuid_t))
 
 typedef struct uuid_ss uuid_ss;
 struct uuid_ss { char s[UUID_SS_LENGTH+1]; };
@@ -31,6 +35,20 @@ uuid_str_2(const char _prefix[], const uuid_t _uuid, size_t _bsz, char _b[]) {
     _b[_bsz-1] = '\0';
     return _b;
 }
+
+static __attribute__((unused)) bool
+uuid_parse_nn(const char *_s, uuid_t _uuid) {
+    if (uuid_parse(_s, _uuid)==-1) {
+        syslog(LOG_ERR, "Invalid UUID: %s", _s);
+        return false;
+    } else if (uuid_is_null(_uuid)) {
+        syslog(LOG_ERR, "Null UUID: %s", _s);
+        return false;
+    } else {
+        return true;
+    }
+}
+
 
 #endif
 /**l*

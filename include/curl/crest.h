@@ -20,6 +20,7 @@ typedef struct crest {
     bool        verbose;
     bool        post;
     const char *post_ctype;
+    char       *auth_header_m;
 } crest;
 
 typedef struct crest_result {
@@ -42,6 +43,7 @@ void crest_destroy(crest *_r) {
         free(_r->d[1]);
         free(_r->d[2]);
         free(_r->userpwd_m);
+        free(_r->auth_header_m);
         free(_r);
     }
 }
@@ -83,6 +85,30 @@ bool crest_set_auth(crest *_o, const char _user[], const char _pass[]) {
     syslog(LOG_ERR, "%s", strerror(errno));
     return false;
 }
+
+static __attribute__((unused))
+bool crest_set_auth_header(crest *_o, const char _fmt[], ...) {
+    va_list va;
+    size_t  l;
+    if (_o->auth_header_m) {
+        free(_o->auth_header_m);
+        _o->auth_header_m = NULL;
+    }
+    
+    va_start(va, _fmt);
+    l = vsnprintf(NULL, 0, _fmt, va);
+    va_end(va);
+    _o->auth_header_m = malloc(l+1);
+    if (!_o->auth_header_m/*err*/) goto failure_errno;
+    va_start(va, _fmt);
+    vsprintf(_o->auth_header_m, _fmt, va);
+    va_end(va);
+    return true;
+ failure_errno:
+    syslog(LOG_ERR, "%s", strerror(errno));
+    return false;
+}
+
 
 static __attribute__((unused))
 bool crest_start_url_v(crest *_r, const char _fmt[], va_list _va) {
@@ -163,9 +189,16 @@ bool crest_perform(crest *_r, const char **_ctype, long *_rcode, char **_d, size
             char *b = alloca(1024);
             sprintf(b, "Content-Type: %s", _r->post_ctype);
             hs = curl_slist_append(hs, b);
-            curl_easy_setopt(_r->curl, CURLOPT_HTTPHEADER, hs);
+            
         }
     }
+    if (_r->auth_header_m) {
+        hs = curl_slist_append(hs, _r->auth_header_m);
+    }
+    if (hs) {
+        curl_easy_setopt(_r->curl, CURLOPT_HTTPHEADER, hs);
+    }
+    
     
     res = curl_easy_perform(_r->curl);
     if (res!=CURLE_OK/*err*/) goto fail_curl;
@@ -219,8 +252,16 @@ bool crest_get_json(json_t **_o, const char _ctype[], long _rcode, char _d[], si
         const char *c = json_string_value(json_object_get(j, "code"));
         const char *t = json_string_value(json_object_get(j, "type"));
         const char *m = json_string_value(json_object_get(j, "message"));
+        syslog(LOG_ERR, "Response: %.*s", (int)_dsz, _d);
         syslog(LOG_ERR, "Failed, return code %li: %s: %s", _rcode,(c)?c:((t)?t:""),(m)?m:"");
         goto cleanup;
+    }
+    if ((j = json_object_get(o, "errorCode")) && json_is_integer(j)) {
+        long long errorCode = json_integer_value(j);
+        if (errorCode >= 300) {
+            syslog(LOG_ERR, "Failed, error code in json: %lli: %.*s", errorCode, (int)_dsz, _d);
+            goto cleanup;
+        }
     }
     if (_rcode != 200) {
         syslog(LOG_ERR, "Failed, return code %li.", _rcode);

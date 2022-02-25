@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <stdlib.h>
 
 typedef int (*strcmp_f) (const char *s1, const char *s2);
 
@@ -26,6 +27,24 @@ char *strmap_get(char *_a[], const char _key[], strcmp_f _cmp) {
         }
     }
     return NULL;
+}
+
+static inline
+void strmap_free(char *_a[]) {
+    for (char **p = _a; *p; p++) {
+        free(*p);
+    }
+}
+
+static inline
+int strmap_malloc(char *_a[]) {
+    for (char **p = _a; *p; p++) {
+        if (!(*p = strdup(*p))) {
+            strmap_free(_a);
+            return -1;
+        }
+    }
+    return 0;
 }
 
 #endif

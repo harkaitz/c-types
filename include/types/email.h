@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdbool.h>
+#include <syslog.h>
 
 #define EMAIL_LENGTH_LIMIT 255
 
@@ -64,7 +65,11 @@ email_is_valid(const email *_e, const char **_opt_reason) {
 
 static __attribute__((unused)) bool
 email_parse (email *_e, const char _s[]) {
-    if (!email_is_valid_str(_s, NULL)) return false;
+    const char *reason;
+    if (!email_is_valid_str(_s, &reason)) {
+        syslog(LOG_ERR, "Invalid e-mail: %s", reason);
+        return false;
+    }
     if (_e) strcpy(_e->s, _s);
     return true;
 }
