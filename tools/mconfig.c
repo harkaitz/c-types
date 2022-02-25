@@ -3,7 +3,7 @@
 #include <libgen.h>
 
 #define COPYRIGHT_LINE \
-    "Donate bitcoin: 1C1ZzDje7vHhF23mxqfcACE8QD4nqxywiV" "\n" \
+    "Bug reports, feature requests to gemini|https://harkadev.com/oss" "\n" \
     "Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com" "\n" \
     ""
 

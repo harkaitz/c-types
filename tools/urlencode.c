@@ -21,11 +21,9 @@ int main (int _argc, const char *_argv[]) {
     return retval;
 }
 /**l*
+ * This software is free to use and modify.
  * 
- * This software is free to use and modify, but not free to maintain.
- * 
- * Donate bitcoin: 1C1ZzDje7vHhF23mxqfcACE8QD4nqxywiV
- * Donate monero: 88JP1c94kDEbyddN4NGU574vwXHB6r3FqcFX9twmxBkGNSnf64c5wjE89YaRVUk7vBbdnecWSXJmRhFWUcLcXUTFJVddZti
+ * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
