@@ -39,7 +39,8 @@ char *prompt_fgetpw (const char _prompt[], char _b[], size_t _blen) {
 
 #endif
 /**l*
- * This software is free to use and modify.
+ * 
+ * MIT License
  * 
  * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com

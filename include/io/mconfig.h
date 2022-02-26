@@ -124,7 +124,8 @@ mconfig_printf(mconfig_t *_m, FILE *_f, const char _cfg[], ...) {
 
 #endif
 /**l*
- * This software is free to use and modify.
+ * 
+ * MIT License
  * 
  * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com

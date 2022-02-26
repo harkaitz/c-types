@@ -88,7 +88,8 @@ email_str(const email *_e) {
 
 #endif
 /**l*
- * This software is free to use and modify.
+ * 
+ * MIT License
  * 
  * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com

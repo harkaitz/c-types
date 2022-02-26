@@ -19,7 +19,8 @@ size_t memsearch(const char _m[], size_t _msz, const char _s[], bool _shift) {
 
 #endif
 /**l*
- * This software is free to use and modify.
+ * 
+ * MIT License
  * 
  * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com

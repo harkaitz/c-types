@@ -147,7 +147,8 @@ int urlencode_post_f(FILE *_fp, bool _is_url, const char *_fmt, ...) {
 
 #endif
 /**l*
- * This software is free to use and modify.
+ * 
+ * MIT License
  * 
  * Bug reports, feature requests to gemini|https://harkadev.com/oss
  * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com
