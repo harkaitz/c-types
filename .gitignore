@@ -9,3 +9,4 @@ tools/fcopy
 tools/mconfig
 deps.log
 tools/freplace
+tools/phash
