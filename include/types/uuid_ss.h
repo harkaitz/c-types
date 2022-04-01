@@ -41,9 +41,6 @@ uuid_parse_nn(const char *_s, uuid_t _uuid) {
     if (uuid_parse(_s, _uuid)==-1) {
         syslog(LOG_ERR, "Invalid UUID: %s", _s);
         return false;
-    } else if (uuid_is_null(_uuid)) {
-        syslog(LOG_ERR, "Null UUID: %s", _s);
-        return false;
     } else {
         return true;
     }
