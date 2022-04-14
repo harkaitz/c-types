@@ -1,61 +1,51 @@
-#ifndef IO_FINDENT_H
-#define IO_FINDENT_H
+#ifndef SLOG_H
+#define SLOG_H
 
-#include <stdio.h>
-#include <stdarg.h>
-
-#ifndef FINDENT_WEAK_THREAD
-#  define FINDENT_WEAK_THREAD __attribute__((weak)) __thread
+#include <syslog.h>
+#ifndef SLOG_PREFIX
+#  define SLOG_PREFIX ""
 #endif
-#ifndef FINDENT_WEAK
-#  define FINDENT_WEAK __attribute__((weak))
+#ifdef RELEASE
+#  ifndef error
+#    define error(FMT,...) syslog(LOG_ERR, SLOG_PREFIX FMT, ##__VA_ARGS__)
+#  endif
+#  ifndef info
+#    define info(FMT,...) syslog(LOG_ERR, SLOG_PREFIX FMT, ##__VA_ARGS__)
+#  endif
+#  define debug(FMT,...) ({})
+#else
+#  ifndef error
+#    define error(FMT,...) syslog(LOG_ERR, SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
+#  endif
+#  ifndef info
+#    define info(FMT,...) syslog(LOG_ERR, SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
+#  endif
+#  ifndef debug
+#    define debug(FMT,...) syslog(LOG_DEBUG, SLOG_PREFIX FMT, ##__VA_ARGS__)
+#  endif
 #endif
 
-FINDENT_WEAK_THREAD
-struct {
-    FILE  *fp;
-    int    indent;
-} __findent[10] = {0};
+#ifdef _
+#  define SLOG_T(T) _(T)
+#else
+#  define SLOG_T(T) T
+#endif
+
+#ifndef error_reason
+#define error_reason(REASONP, MSG) ({           \
+            if ((REASONP)) {                    \
+                *(REASONP) = SLOG_T(MSG);       \
+            } else {                            \
+                error("%s", (MSG));             \
+            }                                   \
+        })
+#endif
+
+#ifndef error_fp
+#  define error_fp(FP,FMT,...) fprintf(FP,FMT "\n", ##__VA_ARGS__)
+#endif
 
 
-FINDENT_WEAK
-void findent(FILE *_fp, int _shift) {
-    for (int i=0; i<10; i++) {
-        if (__findent[i].fp == _fp) {
-            __findent[i].indent += _shift;
-            break;
-        }
-        if (!__findent[i].fp) {
-            __findent[i].fp      = _fp;
-            __findent[i].indent += _shift;
-            break;
-        }
-    }
-}
-
-FINDENT_WEAK
-int fprintf_i(FILE *_fp, const char _fmt[], ...) {
-    va_list va;
-    int ret = 0,i,j,e;
-    for (i=0; i<10; i++) {
-        if (__findent[i].fp != _fp) continue;
-        for (j=0; j<__findent[i].indent; j++) {
-            e = fputs("    ", _fp);
-            if (e == EOF/*err*/) return -1;
-            ret += 4;
-        }
-        break;
-    }
-    va_start(va, _fmt);
-    e = vfprintf(_fp, _fmt, va);
-    va_end(va);
-    if (e < 0/*err*/) return -1;
-    ret += e;
-    e = fputs("\n", _fp);
-    if (e == EOF/*err*/) return -1;
-    ret += 1;
-    return ret;
-}
 
 #endif
 /**l*

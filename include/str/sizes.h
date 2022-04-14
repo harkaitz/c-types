@@ -7,8 +7,11 @@ typedef char   str128  [128];
 typedef char   str256  [256];
 typedef char   str512  [512];
 typedef char   str1024 [1024];
-typedef str256 strurl;
 typedef char   struuid [37];
+
+typedef str256 strurl;
 typedef str512 strpath;
+
+typedef const char *cstr;
 
 #endif

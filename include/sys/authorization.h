@@ -1,63 +1,44 @@
 #ifndef SYS_AUTHORIZATION_H
 #define SYS_AUTHORIZATION_H
 
+#include "../io/slog.h"
+#include "../types/username.h"
 #include <uuid/uuid.h>
 #include <string.h>
 #include <stdbool.h>
 #include <syslog.h>
 #include <stdio.h>
 
-#define AUTHORIZATION_MAX_USERNAME 255
-
 typedef struct pam_handle pam_handle_t;
 
-struct authorization_s {
-    char username[AUTHORIZATION_MAX_USERNAME+1];
-};
-
-
 __thread __attribute__((weak))
-struct authorization_s g_authorization[1];
+username g_authorization[1] = {0};
 
-static inline
-void authorization_close (void) {
+static inline void
+authorization_close (void) {
     memset(g_authorization, 0, sizeof(g_authorization));
 }
 
-static inline
-bool authorization_open(const char _username[]) {
-    for (size_t i=0; _username[i]; i++) {
-        if (strchr("/:\\\"'%$\n\r \t", _username[i])) {
-            syslog(LOG_ERR, "%s: Invalid username.", _username);
-            return false;
-        } else if (i>AUTHORIZATION_MAX_USERNAME) {
-            syslog(LOG_ERR, "%s: Invalid username.", _username);
-            return false;
-        }
-    }
-    strcpy(g_authorization->username, _username);
-    return true;
+static inline bool
+authorization_open(const char _username[]) {
+    return username_parse(g_authorization, _username, NULL);
 }
 
-static inline
-bool authorization_open_pam(pam_handle_t *_pam) {
+static inline bool
+authorization_open_pam(pam_handle_t *_pam) {
+    const void *v; int e;
     int pam_get_item(const pam_handle_t *pamh, int item_type, const void **item);
-    const void *v;
-    int res = pam_get_item(_pam, 2 /*PAM_USER*/, (const void **)&v);
-    if (res!=0/*PAM_SUCCESS*/) {
-        syslog(LOG_ERR, "Can't get username from PAM handle.");
+    e = pam_get_item(_pam, 2 /*PAM_USER*/, (const void **)&v);
+    if (e!=0/*PAM_SUCCESS*/) {
+        error("Can't get username from PAM handle.");
         return false;
     }
     return authorization_open(v);
 }
 
-static inline
-const char *authorization_get_username(void) {
-    if (g_authorization->username[0]) {
-        return g_authorization->username;
-    } else {
-        return NULL;
-    }
+static inline const char *
+authorization_get_username(void) {
+    return (g_authorization[0].s[0])?g_authorization[0].s:NULL;
 }
 
 #endif

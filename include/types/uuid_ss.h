@@ -4,7 +4,7 @@
 #include <uuid/uuid.h>
 #include <string.h>
 #include <stdio.h>
-#include <syslog.h>
+#include "../io/slog.h"
 #include <stdbool.h>
 
 #define UUID_SS_LENGTH 36
@@ -36,15 +36,32 @@ uuid_str_2(const char _prefix[], const uuid_t _uuid, size_t _bsz, char _b[]) {
     return _b;
 }
 
-static __attribute__((unused)) bool
+static __attribute__((unused,deprecated)) bool
 uuid_parse_nn(const char *_s, uuid_t _uuid) {
     if (uuid_parse(_s, _uuid)==-1) {
-        syslog(LOG_ERR, "Invalid UUID: %s", _s);
+        error("Invalid UUID");
         return false;
     } else {
         return true;
     }
 }
+
+static inline bool
+uuid_parse_secure(uuid_t _uuid, const char *_s, bool _allow_null, const char **_reason) {
+    if (_s == NULL) {
+        error_reason(_reason, "NULL input.");
+        return false;
+    } else if (uuid_parse(_s, _uuid)==-1) {
+        error_reason(_reason, "Invalid UUID.");
+        return false;
+    } else if (_allow_null == false && uuid_is_null(_uuid)) {
+        error_reason(_reason, "The UUID is null.");
+        return false;
+    } else {
+        return true;
+    }
+}
+
 
 
 #endif

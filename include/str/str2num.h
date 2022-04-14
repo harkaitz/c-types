@@ -24,4 +24,22 @@ int str2num(const char *s1, int (*f) (const char *,const char *), ...) {
     return retval;
 }
 
+static inline
+int num2num(int _num, int _last, ...) {
+    va_list        va;
+    int            f1;
+    int            f2;
+    int            res = _last;
+    va_start(va, _last);
+    while ((f1 = va_arg(va, int)) != _last) {
+        f2 = va_arg(va, int);
+        if (f1 == _num) {
+            res = f2;
+            break;
+        }
+    }
+    va_end(va);
+    return res;
+}
+
 #endif

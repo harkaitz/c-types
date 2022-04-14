@@ -7,12 +7,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-#ifndef WEAK
-#  define WEAK __attribute__((weak))
-#endif
-
-
+#include "../io/slog.h"
 
 typedef struct coin_s {
     unsigned long cents;
@@ -24,14 +19,7 @@ typedef struct coin_ss {
 
 #define COIN_SS_STORE alloca(sizeof(coin_ss))
 
-#ifdef _
-#  define COIN_SS_T(T) _(T)
-#else
-#  define COIN_SS_T(T) T
-#endif
-
-
-WEAK const char *g_coin_default = "eur";
+__attribute__((weak)) const char *g_coin_default = "eur";
 
 static inline coin_t
 coin (unsigned long _cents, const char _currency[]) {
@@ -58,14 +46,13 @@ coin_equal (coin_t _c1, coin_t _c2) {
 }
 
 static inline bool
-coin_parse (coin_t *_opt_out, const char _value[], const char **_opt_reason) {
+coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
 
     const char  *p            = _value;
     const char  *currency     = NULL;
     size_t       currency_len = 0;
     long         n1           = 0;
     long         n2           = 0;
-    const char  *reason       = NULL;
     char        *next;
 
     /* Get currency from the start. */
@@ -73,8 +60,9 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_opt_reason) {
         currency = _value;
         while (!isdigit(*p)) ++p;
     }
-    if (!isdigit(*p)) {
-        goto fail_no_digits;
+    if (!isdigit(*p)/*err*/) {
+        error_reason(_reason, "No digits");
+        return false;
     }
     if (currency) {
         currency_len = p-currency;
@@ -82,10 +70,13 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_opt_reason) {
     
     /* Get first number. */
     n1 = strtol(p, &next, 10);
-    if (next == p) {
-        goto fail_no_digits;
-    } else if (n1 >= LONG_MAX/200 || n2 < 0) {
-        goto fail_out_of_bounds;
+    if (next == p/*err*/) {
+        error_reason(_reason, "No digits");
+        return false;
+    }
+    if (n1 >= LONG_MAX/200 || n2 < 0/*err*/) {
+        error_reason(_reason, "Out of bounds");
+        return false;
     }
     p = next;
 
@@ -97,18 +88,22 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_opt_reason) {
         if (isdigit(*p)) pp[ppn++] = *(p++);
         pp[ppn] = '\0';
         n2 = strtol(pp, &next, 10);
-        if (*next != '\0') {
-            goto fail_no_decimals;
-        } else if (n2 < 0 || n2 >= 100) {
-            goto fail_invalid_precission;
+        if (*next != '\0'/*err*/) {
+            error_reason(_reason, "No decimals");
+            return false;
+        }
+        if (n2 < 0 || n2 >= 100/*err*/) {
+            error_reason(_reason, "Invalid precission");
+            return false;
         }
         p = next;
     }
 
     /* Get currency from the end. */
     if (*p) {
-        if (currency) {
-            goto fail_dupplicate_currency;
+        if (currency/*err*/) {
+            error_reason(_reason, "Duplicate currency");
+            return false;
         }
         currency     = p;
         currency_len = strlen(currency);
@@ -121,8 +116,9 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_opt_reason) {
     }
 
     /* Currency too long. */
-    if (currency_len >= sizeof(_opt_out->currency)) {
-        goto fail_invalid_currency;
+    if (currency_len >= sizeof(_opt_out->currency)/*err*/) {
+        error_reason(_reason, "Invalid currency");
+        return false;
     }
 
     /* Set coin. */
@@ -140,13 +136,6 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_opt_reason) {
         }
     }
     return true;
- fail_no_digits:           reason = COIN_SS_T("No digits");           goto fail;
- fail_out_of_bounds:       reason = COIN_SS_T("Out of bounds");       goto fail;
- fail_no_decimals:         reason = COIN_SS_T("No decimals");         goto fail;
- fail_invalid_precission:  reason = COIN_SS_T("Invalid precission");  goto fail;
- fail_dupplicate_currency: reason = COIN_SS_T("Dupplicate currency"); goto fail;
- fail_invalid_currency:    reason = COIN_SS_T("Invalid currency");    goto fail;
- fail:                     if (_opt_reason) *_opt_reason = reason;    return false;
 }
 
 static inline int
@@ -164,43 +153,51 @@ coin_sprintf (coin_t _c, size_t _max, char _buf[_max]) {
 }
 
 static inline bool
-coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_opt_reason) {
-    const char *reason;
-    if (_div == 0) goto fail_division_by_zero;
-    if (_i.cents % _div) goto fail_not_divisible;
+coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
+    if (_div == 0/*err*/) {
+        error_reason(_reason, "Division by zero");
+        return false;
+    }
+    if (_i.cents % _div/*err*/) {
+        error_reason(_reason, "Not divisible");
+        return false;
+    }
     _o->cents = _i.cents / _div;
     strcpy(_o->currency,_i.currency);
     return true;
- fail_division_by_zero: reason = COIN_SS_T("Division by zero"); goto fail;
- fail_not_divisible:    reason = COIN_SS_T("Not divisible");    goto fail;
- fail:                  if (_opt_reason) *_opt_reason = reason; return false;
 }
 
 static inline bool
-coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_opt_reason) {
-    const char *reason;
-    if (!coin_same_currency(_i,_div)) goto fail_not_same_currency;
-    if (_div.cents == 0) goto fail_division_by_zero;
-    if (_i.cents % _div.cents) goto fail_not_divisible;    
+coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
+    if (!coin_same_currency(_i,_div)/*err*/) {
+        error_reason(_reason, "Not same currency");
+        return false;
+    }
+    if (_div.cents == 0/*err*/) {
+        error_reason(_reason, "Division by zero");
+        return false;
+    }
+    if (_i.cents % _div.cents/*err*/) {
+        error_reason(_reason, "Not divisible");
+        return false;
+    }
     *_o = _i.cents / _div.cents;
     return true;
- fail_division_by_zero:  reason = COIN_SS_T("Division by zero");  goto fail;
- fail_not_divisible:     reason = COIN_SS_T("Not divisible");     goto fail;
- fail_not_same_currency: reason = COIN_SS_T("Not same currency"); goto fail;
- fail:                   if (_opt_reason) *_opt_reason = reason;  return false;
 }
 
 static inline bool
-coin_substract (coin_t *_o, coin_t _c1, coin_t _c2, const char **_opt_reason) {
-    const char *reason;
-    if (!coin_same_currency(_c1,_c2)) goto fail_not_same_currency;
-    if (_c2.cents > _c1.cents) goto fail_pass_to_negative; 
+coin_substract (coin_t *_o, coin_t _c1, coin_t _c2, const char **_reason) {
+    if (!coin_same_currency(_c1,_c2)/*err*/) {
+        error_reason(_reason, "Not the same surrency");
+        return false;
+    }
+    if (_c2.cents > _c1.cents/*err*/) {
+        error_reason(_reason, "Pass to negative");
+        return false;
+    }
     _o->cents = _c1.cents - _c2.cents;
     strcpy(_o->currency,_c1.currency);
     return true;
- fail_not_same_currency: reason = COIN_SS_T("Not the same surrency"); goto fail;
- fail_pass_to_negative:  reason = COIN_SS_T("Pass to negative");      goto fail;
- fail:                   if (_opt_reason) *_opt_reason = reason;      return false;
 }
 
 static inline coin_t
