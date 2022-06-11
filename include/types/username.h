@@ -12,24 +12,24 @@ struct username { char s[64]; };
 static __attribute__((unused)) bool
 username_is_valid_str (const char _s[], const char **_opt_reason) {
     size_t i;
-    if (!_s) {
-        error_reason(_opt_reason, "Null username.");
+    if (!_s || !_s[0]) {
+        error_reason(_opt_reason, NO_USERNAME, "No username");
         return false;
     }
     for (i=0; _s[i]; i++) {
-        if (strchr("/:\\\"'%$\n\r \t", _s[i])) {
-            error_reason(_opt_reason, "Invalid characters in username");
-            return false;
+        if (strchr("/\\\"'%$\n\r \t", _s[i])) {
+            goto invalid_username;
         } else if (i>sizeof(char [64])-1) {
-            error_reason(_opt_reason, "Username too large.");
-            return false;
+            goto invalid_username;
         }
     }
     if (i<8) {
-        error_reason(_opt_reason, "Username too small.");
-        return false;
+        goto invalid_username;
     }
     return true;
+ invalid_username:
+    error_reason(_opt_reason, INVALID_USERNAME, "Invalid username");
+    return false;
 }
 
 static inline bool

@@ -3,12 +3,7 @@
 
 #include <string.h>
 #include <stdbool.h>
-
-typedef enum bool_err_e {
-    BOOL_ERR_NULL_VALUE    = 0,
-    BOOL_ERR_INVALID_VALUE = 1,
-    BOOL_ERR_MAX           = 2
-} bool_err_e;
+#include <io/slog.h>
 
 __attribute__((weak))
 const char *g_true_values[] = {
@@ -20,7 +15,7 @@ const char *g_false_values[] = {
 };
 
 static __attribute__((unused)) bool
-bool_parse (bool *_opt_out, const char *_in, bool_err_e *_opt_reason) {
+bool_parse (bool *_opt_out, const char *_in, const char **_opt_reason) {
     if (!_in) goto fail_null_value;
     for (const char **s = g_true_values; *s; s++) {
         if (!strcasecmp(_in, *s)) {
@@ -36,18 +31,22 @@ bool_parse (bool *_opt_out, const char *_in, bool_err_e *_opt_reason) {
     }
     goto fail_invalid_value;
  fail_invalid_value:
-    if (_opt_reason) *_opt_reason = BOOL_ERR_INVALID_VALUE;
+    error_reason(_opt_reason, INVALID_VALUE, "Invalid value");
     return false;
  fail_null_value:
-    if (_opt_reason) *_opt_reason = BOOL_ERR_NULL_VALUE;
+    error_reason(_opt_reason, NULL_VALUE, "NULL value");
     return false;
 }
 
-static __attribute__((unused)) const char *
+static inline const char *
 bool_str (bool _in) {
     return (_in)?g_true_values[0]:g_false_values[0];
 }
 
+static inline const char *
+bool_str2(bool _in, const char *_true, const char *_false) {
+    return (_in)?_true:_false;
+}
 
 
 #endif

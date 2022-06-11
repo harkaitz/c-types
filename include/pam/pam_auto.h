@@ -45,15 +45,9 @@ pam_weblogin_conv(int                        _msgsz,
             break;
         case PAM_ERROR_MSG:
             syslog(LOG_ERR, "%s", m->msg);
-            if (t->fp) {
-                fprintf(t->fp, "%s\n", mtext_get(m->msg));
-            }
             break;
         case PAM_TEXT_INFO:
             syslog(LOG_INFO, "%s", m->msg);
-            if (t->fp) {
-                fprintf(t->fp, "%s\n", mtext_get(m->msg));
-            }
             break;
         default:
             goto cleanup_no_style;

@@ -1,6 +1,7 @@
 #ifndef SLOG_H
 #define SLOG_H
 
+#include <str/mtext.h>
 #include <syslog.h>
 #ifndef SLOG_PREFIX
 #  define SLOG_PREFIX ""
@@ -12,7 +13,15 @@
 #  ifndef info
 #    define info(FMT,...) syslog(LOG_ERR, SLOG_PREFIX FMT, ##__VA_ARGS__)
 #  endif
-#  define debug(FMT,...) ({})
+#  ifndef debug
+#    define debug(FMT,...) ({})
+#  endif
+#  ifndef debug_func
+#    define debug_func() ({})
+#  endif
+#  ifndef debug_func_txt
+#    define debug_func_txt(FMT,...) ({})
+#  endif
 #else
 #  ifndef error
 #    define error(FMT,...) syslog(LOG_ERR, SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
@@ -23,29 +32,25 @@
 #  ifndef debug
 #    define debug(FMT,...) syslog(LOG_DEBUG, SLOG_PREFIX FMT, ##__VA_ARGS__)
 #  endif
+#  ifndef debug_func
+#    define debug_func() debug("%s();", __func__)
+#  endif
+#  ifndef debug_func_txt
+#    define debug_func_txt(FMT,...) debug("%s(); " FMT, __func__, ##__VA_ARGS__)
+#  endif
 #endif
 
-#ifdef _
-#  define SLOG_T(T) _(T)
-#else
-#  define SLOG_T(T) T
-#endif
+
 
 #ifndef error_reason
-#define error_reason(REASONP, MSG) ({           \
+#define error_reason(REASONP, CODE, MSG) ({     \
             if ((REASONP)) {                    \
-                *(REASONP) = SLOG_T(MSG);       \
+                *(REASONP) = MTXT(CODE, MSG); \
             } else {                            \
                 error("%s", (MSG));             \
             }                                   \
         })
 #endif
-
-#ifndef error_fp
-#  define error_fp(FP,FMT,...) fprintf(FP,FMT "\n", ##__VA_ARGS__)
-#endif
-
-
 
 #endif
 /**l*

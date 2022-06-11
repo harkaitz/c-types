@@ -61,7 +61,7 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
         while (!isdigit(*p)) ++p;
     }
     if (!isdigit(*p)/*err*/) {
-        error_reason(_reason, "No digits");
+        error_reason(_reason, INVALID_FORMAT, "Invalid format");
         return false;
     }
     if (currency) {
@@ -71,11 +71,11 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
     /* Get first number. */
     n1 = strtol(p, &next, 10);
     if (next == p/*err*/) {
-        error_reason(_reason, "No digits");
+        error_reason(_reason, INVALID_FORMAT, "Invalid format");
         return false;
     }
     if (n1 >= LONG_MAX/200 || n2 < 0/*err*/) {
-        error_reason(_reason, "Out of bounds");
+        error_reason(_reason, OUT_OF_BOUNDS, "Out of bounds");
         return false;
     }
     p = next;
@@ -89,11 +89,11 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
         pp[ppn] = '\0';
         n2 = strtol(pp, &next, 10);
         if (*next != '\0'/*err*/) {
-            error_reason(_reason, "No decimals");
+            error_reason(_reason, INVALID_FORMAT, "Invalid format");
             return false;
         }
         if (n2 < 0 || n2 >= 100/*err*/) {
-            error_reason(_reason, "Invalid precission");
+            error_reason(_reason, INVALID_PRECISSION, "Invalid precission");
             return false;
         }
         p = next;
@@ -102,7 +102,7 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
     /* Get currency from the end. */
     if (*p) {
         if (currency/*err*/) {
-            error_reason(_reason, "Duplicate currency");
+            error_reason(_reason, INVALID_FORMAT, "Invalid format");
             return false;
         }
         currency     = p;
@@ -117,7 +117,7 @@ coin_parse (coin_t *_opt_out, const char _value[], const char **_reason) {
 
     /* Currency too long. */
     if (currency_len >= sizeof(_opt_out->currency)/*err*/) {
-        error_reason(_reason, "Invalid currency");
+        error_reason(_reason, INVALID_FORMAT, "Invalid format");
         return false;
     }
 
@@ -155,11 +155,11 @@ coin_sprintf (coin_t _c, size_t _max, char _buf[_max]) {
 static inline bool
 coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
     if (_div == 0/*err*/) {
-        error_reason(_reason, "Division by zero");
+        error_reason(_reason, DIVISION_BY_ZERO, "Division by zero");
         return false;
     }
     if (_i.cents % _div/*err*/) {
-        error_reason(_reason, "Not divisible");
+        error_reason(_reason, NOT_DIVISIBLE, "Not divisible");
         return false;
     }
     _o->cents = _i.cents / _div;
@@ -170,15 +170,15 @@ coin_divide1 (coin_t *_o, coin_t _i, unsigned long _div, const char **_reason) {
 static inline bool
 coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
     if (!coin_same_currency(_i,_div)/*err*/) {
-        error_reason(_reason, "Not same currency");
+        error_reason(_reason, NOT_SAME_CURRENCY, "Not same currency");
         return false;
     }
     if (_div.cents == 0/*err*/) {
-        error_reason(_reason, "Division by zero");
+        error_reason(_reason, DIVISION_BY_ZERO, "Division by zero");
         return false;
     }
     if (_i.cents % _div.cents/*err*/) {
-        error_reason(_reason, "Not divisible");
+        error_reason(_reason, NOT_DIVISIBLE, "Not divisible");
         return false;
     }
     *_o = _i.cents / _div.cents;
@@ -188,11 +188,11 @@ coin_divide2 (long *_o, coin_t _i, coin_t _div, const char **_reason) {
 static inline bool
 coin_substract (coin_t *_o, coin_t _c1, coin_t _c2, const char **_reason) {
     if (!coin_same_currency(_c1,_c2)/*err*/) {
-        error_reason(_reason, "Not the same surrency");
+        error_reason(_reason, NOT_SAME_CURRENCY, "Not the same surrency");
         return false;
     }
     if (_c2.cents > _c1.cents/*err*/) {
-        error_reason(_reason, "Pass to negative");
+        error_reason(_reason, PASS_TO_NEGATIVE, "Pass to negative");
         return false;
     }
     _o->cents = _c1.cents - _c2.cents;
