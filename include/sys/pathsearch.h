@@ -9,16 +9,18 @@
 #include <errno.h>
 #include <stdio.h>
 
+
 static __attribute__((unused))
 bool pathsearch (const char _path[], char _sep, const char _name[], char **_o) {
     char       *found  = NULL;
     bool        retval = false;
     char        path[strlen(_path)+1];
     char        seps[] = {_sep, '\0'};
+    char       *s2,*s1;
     strcpy(path, _path);
 
     
-    for(char *s2,*s1 = strtok_r(path, seps, &s2); s1; s1 = strtok_r(NULL, seps, &s2)) {
+    for(s1 = strtok_r(path, seps, &s2); s1; s1 = strtok_r(NULL, seps, &s2)) {
         char b[strlen(s1)+1+strlen(_name)+1];
         sprintf(b, "%s/%s", s1, _name);
         struct stat sb = {0};
