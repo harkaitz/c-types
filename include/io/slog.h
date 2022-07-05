@@ -1,42 +1,58 @@
 #ifndef SLOG_H
 #define SLOG_H
 
+#include <execinfo.h>
 #include <str/mtext.h>
 #include <syslog.h>
 #ifndef SLOG_PREFIX
 #  define SLOG_PREFIX ""
 #endif
+
+__attribute__((weak)) __thread void  *SLOG_BACKTRACE[20] = {0};
+__attribute__((weak)) __thread size_t SLOG_BACKTRACESZ   = 0;
+__attribute__((weak)) void slog_print_backtrace (void) {
+    char **strings; int i;
+    strings = backtrace_symbols (SLOG_BACKTRACE, SLOG_BACKTRACESZ);
+    if (strings) {
+        for (i = 0; i < SLOG_BACKTRACESZ; i++) {
+            syslog(LOG_ERR, "BT: %s\n", strings[i]);
+        }
+        free (strings);
+    }
+}
+
+
+
+#define slog_error(FMT, ...) ({                                 \
+            SLOG_BACKTRACESZ = backtrace(SLOG_BACKTRACE, 20);   \
+            slog_print_backtrace();                             \
+            syslog(LOG_ERR  , FMT, ##__VA_ARGS__);              \
+        })
+#define slog_info(FMT,...)   ({ syslog(LOG_INFO , FMT, ##__VA_ARGS__); })
+#define slog_debug(FMT, ...) ({ syslog(LOG_DEBUG, FMT, ##__VA_ARGS__); })
+
+
+
+
 #ifdef RELEASE
 #  ifndef error
-#    define error(FMT,...) syslog(LOG_ERR, SLOG_PREFIX FMT, ##__VA_ARGS__)
+#    define error(FMT,...) slog_error(SLOG_PREFIX FMT, ##__VA_ARGS__)
 #  endif
 #  ifndef info
-#    define info(FMT,...) syslog(LOG_ERR, SLOG_PREFIX FMT, ##__VA_ARGS__)
+#    define info(FMT,...) slog_error(SLOG_PREFIX FMT, ##__VA_ARGS__)
 #  endif
 #  ifndef debug
 #    define debug(FMT,...) ({})
 #  endif
-#  ifndef debug_func
-#    define debug_func() ({})
-#  endif
-#  ifndef debug_func_txt
-#    define debug_func_txt(FMT,...) ({})
-#  endif
 #else
 #  ifndef error
-#    define error(FMT,...) syslog(LOG_ERR, SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
+#    define error(FMT,...) slog_error(SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
 #  endif
 #  ifndef info
-#    define info(FMT,...) syslog(LOG_ERR, SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
+#    define info(FMT,...) slog_info(SLOG_PREFIX "%s: " FMT, __func__, ##__VA_ARGS__)
 #  endif
 #  ifndef debug
-#    define debug(FMT,...) syslog(LOG_DEBUG, SLOG_PREFIX FMT, ##__VA_ARGS__)
-#  endif
-#  ifndef debug_func
-#    define debug_func() debug("%s();", __func__)
-#  endif
-#  ifndef debug_func_txt
-#    define debug_func_txt(FMT,...) debug("%s(); " FMT, __func__, ##__VA_ARGS__)
+#    define debug(FMT,...) slog_debug(SLOG_PREFIX FMT, ##__VA_ARGS__)
 #  endif
 #endif
 

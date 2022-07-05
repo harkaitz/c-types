@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <syslog.h>
+#include <ctype.h>
 
 #define EMAIL_LENGTH_LIMIT 255
 
@@ -70,7 +71,13 @@ email_parse (email *_e, const char _s[]) {
         syslog(LOG_ERR, "Invalid e-mail: %s", reason);
         return false;
     }
-    if (_e) strcpy(_e->s, _s);
+    if (_e) {
+        size_t i;
+        for(i=0; _s[i]; i++) {
+            _e->s[i] = tolower(_s[i]);
+        }
+        _e->s[i]='\0';
+    }
     return true;
 }
 

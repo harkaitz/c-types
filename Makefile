@@ -30,7 +30,7 @@ help:
 ## Programs.
 all: $(PROGRAMS)
 tools/%: tools/%.c $(HEADERS)
-	$(CC) -o $@ $<$(CFLAGS_ALL) $(LIBS)
+	$(CC) -o $@ $< $(CFLAGS_ALL) $(LIBS)
 
 ## install and clean.
 install:

@@ -14,6 +14,12 @@ typedef struct pam_handle pam_handle_t;
 __thread __attribute__((weak))
 username g_authorization[1] = {0};
 
+__thread __attribute__((weak))
+bool     g_authorization_is_root = false;
+
+__attribute__((weak))
+const char *AUTHORIZATION_ROOT_USERNAME;
+
 static inline void
 authorization_close (void) {
     memset(g_authorization, 0, sizeof(g_authorization));
@@ -21,24 +27,41 @@ authorization_close (void) {
 
 static inline bool
 authorization_open(const char _username[]) {
-    return username_parse(g_authorization, _username, NULL);
-}
-
-static inline bool
-authorization_open_pam(pam_handle_t *_pam) {
-    const void *v; int e;
-    int pam_get_item(const pam_handle_t *pamh, int item_type, const void **item);
-    e = pam_get_item(_pam, 2 /*PAM_USER*/, (const void **)&v);
-    if (e!=0/*PAM_SUCCESS*/) {
-        error("Can't get username from PAM handle.");
+    if (!username_parse(g_authorization, _username, NULL)) {
+        g_authorization->s[0] = '\0';
+        g_authorization_is_root = false;
         return false;
     }
-    return authorization_open(v);
+    g_authorization_is_root = 
+        AUTHORIZATION_ROOT_USERNAME
+        &&
+        !strcmp(g_authorization->s, AUTHORIZATION_ROOT_USERNAME);
+    return true;
 }
 
 static inline const char *
 authorization_get_username(void) {
-    return (g_authorization[0].s[0])?g_authorization[0].s:NULL;
+    return (g_authorization->s[0])?g_authorization->s:NULL;
 }
+
+static inline bool
+authorization_user_is(const char _username[]) {
+    if (g_authorization_is_root) {
+        return true;
+    } else if (!g_authorization->s[0]) {
+        return false;
+    } else if (!strcmp(g_authorization->s, _username)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+static inline bool
+authorization_user_is_root(void) {
+    return g_authorization_is_root;
+}
+
+
 
 #endif

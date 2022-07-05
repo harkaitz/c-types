@@ -18,8 +18,8 @@ mtext_set_lang(const char _lang[]) {
     strncpy(g_mtext_lang, _lang, sizeof(g_mtext_lang)-1);
 }
 
-static inline
-const char *mtxt_search_word(const char **_a1, const char **_a2) {
+static inline const char *
+mtxt_search_word(const char **_a1, const char **_a2) {
     int i;
     if (_a2) {
         for (i=0; _a2[i]; i+=2) {
