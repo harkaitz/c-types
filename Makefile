@@ -3,21 +3,20 @@ DESTDIR     =
 PREFIX      =/usr/local
 AR          =ar
 CC          =gcc
-CFLAGS      =-Wall -g
-CPPFLAGS    =
+CFLAGS      =-Wall -g -rdynamic
+CPPFLAGS    =-DRELEASE
 LIBS        =
 HEADERS_STR   =$(shell find include/str      -iregex '.*\.h')
 HEADERS_TYPES =$(shell find include/types    -iregex '.*\.h')
 HEADERS_IO    =$(shell find include/io       -iregex '.*\.h')
 HEADERS_SYS   =$(shell find include/sys      -iregex '.*\.h')
-HEADERS_PAM   =$(shell find include/pam      -iregex '.*\.h')
 MARKDOWNS     =$(shell find doc              -iregex '.*\.md')
 MANPAGES_1    =$(shell find doc              -iregex '.*\.1')
 MANPAGES_3    =$(shell find doc              -iregex '.*\.3')
 PROGRAMS_S    =$(shell find tools            -iregex '.*\.c')
 HEADERS     =                                             \
     $(HEADERS_STR)      $(HEADERS_TYPES)  $(HEADERS_IO)   \
-    $(HEADERS_SYS)      $(HEADERS_PAM)
+    $(HEADERS_SYS)
 PROGRAMS    =$(patsubst %.c,%,$(PROGRAMS_S))
 CFLAGS_ALL  =$(LDFLAGS) $(CFLAGS) $(CPPFLAGS)
 ## Help string.
@@ -48,7 +47,15 @@ install:
 	install -m644 $(HEADERS_IO)    $(DESTDIR)$(PREFIX)/include/io
 	install -d                     $(DESTDIR)$(PREFIX)/include/sys
 	install -m644 $(HEADERS_SYS)   $(DESTDIR)$(PREFIX)/include/sys
-	install -d                     $(DESTDIR)$(PREFIX)/include/pam
-	install -m644 $(HEADERS_PAM)   $(DESTDIR)$(PREFIX)/include/pam
 clean:
 	rm -f $(PROGRAMS)
+## -- gettext --
+ifneq ($(PREFIX),)
+install: install-po
+install-po:
+	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
+	cp locales/es/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
+	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
+	cp locales/eu/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
+endif
+## -- gettext --

@@ -4,8 +4,8 @@
 #include <uuid/uuid.h>
 #include <string.h>
 #include <stdio.h>
-#include "../io/slog.h"
 #include <stdbool.h>
+#include <syslog.h>
 
 #define UUID_SS_LENGTH 36
 #define UUID_SS_STORE ((uuid_ss*) alloca(UUID_SS_LENGTH+1))
@@ -39,7 +39,7 @@ uuid_str_2(const char _prefix[], const uuid_t _uuid, size_t _bsz, char _b[]) {
 static __attribute__((unused,deprecated)) bool
 uuid_parse_nn(const char *_s, uuid_t _uuid) {
     if (uuid_parse(_s, _uuid)==-1) {
-        error("Invalid UUID");
+        syslog(LOG_ERR, "Invalid UUID");
         return false;
     } else {
         return true;
@@ -49,13 +49,13 @@ uuid_parse_nn(const char *_s, uuid_t _uuid) {
 static inline bool
 uuid_parse_secure(uuid_t _uuid, const char *_s, bool _allow_null, const char **_reason) {
     if (_s == NULL) {
-        error_reason(_reason, MISSING_UUID, "Missing UUID");
+        if (_reason) *_reason = "Missing UUID";
         return false;
     } else if (uuid_parse(_s, _uuid)==-1) {
-        error_reason(_reason, INVALID_UUID, "Invalid UUID");
+        if (_reason) *_reason = "Invalid UUID";
         return false;
     } else if (_allow_null == false && uuid_is_null(_uuid)) {
-        error_reason(_reason, NULL_UUID, "The UUID is null");
+        if (_reason) *_reason = "The UUID is null";
         return false;
     } else {
         return true;

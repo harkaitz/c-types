@@ -1,0 +1,85 @@
+# Basque translations for PACKAGE package.
+# Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2022.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-07-08 05:07+0200\n"
+"PO-Revision-Date: 2022-07-08 04:15+0200\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: eu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: include/types/password.h:28
+msgid "Null password"
+msgstr "Null pasahitza"
+
+#: include/types/password.h:31
+msgid "Password too long"
+msgstr "Contraseña demasiado larga"
+
+#: include/types/password.h:34
+msgid "Password too short"
+msgstr "Contraseña demasiado corta"
+
+#: include/types/bool_ss.h:41
+msgid "Invalid value"
+msgstr "Balio txarra"
+
+#: include/types/bool_ss.h:44
+msgid "NULL value"
+msgstr "NULL balioa"
+
+#: include/types/long_ss.h:23 include/types/long_ss.h:42
+msgid "No number"
+msgstr "Zenbakirik ez"
+
+#: include/types/long_ss.h:28 include/types/long_ss.h:47
+msgid "Invalid number"
+msgstr "Zenbaki txarra"
+
+#: include/types/long_ss.h:32 include/types/long_ss.h:51
+msgid "Out of bounds"
+msgstr "Limitez kanpo"
+
+#: include/types/time_ss.h:45
+msgid "Null string"
+msgstr "Null string"
+
+#: include/types/time_ss.h:53
+msgid "Missing year, shall be YYYY-MM-DD"
+msgstr "Urtea falta da, UUUU-II-EE"
+
+#: include/types/time_ss.h:54
+msgid "Missing month, shall be YYYY-MM-DD"
+msgstr "Hilabetea falta da, UUUU/II/EE."
+
+#: include/types/time_ss.h:55
+msgid "Missing day, shall be YYYY-MM-DD"
+msgstr "Eguna falta da, UUUU/II/EE"
+
+#: include/types/time_ss.h:60
+msgid "Invalid year"
+msgstr "Urte txarra"
+
+#: include/types/time_ss.h:61
+msgid "Invalid month"
+msgstr "Hilabete txarra."
+
+#: include/types/time_ss.h:62
+msgid "Invalid day"
+msgstr "Egun txarra."
+
+#: include/types/username.h:23
+msgid "No username"
+msgstr "Erabiltzailerik ez"
+
+#: include/types/username.h:38
+msgid "Invalid username"
+msgstr "Erabiltzaile txarra"

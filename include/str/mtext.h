@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <syslog.h>
+#include <locale.h>
 
 __attribute__((weak)) __thread char g_mtext_lang[10] = "en";
 
@@ -15,6 +16,14 @@ mtext_lang(void) {
 
 static inline void
 mtext_set_lang(const char _lang[]) {
+    
+    if (!strcmp(_lang, "es")) {
+        setlocale(LC_ALL, "es_ES.UTF-8");
+    } else if (!strcmp(_lang, "en")) {
+        setlocale(LC_ALL, "en_EN.UTF-8");
+    } else if (!strcmp(_lang, "eu")) {
+        setlocale(LC_ALL, "eu_ES.UTF-8");
+    }
     strncpy(g_mtext_lang, _lang, sizeof(g_mtext_lang)-1);
 }
 

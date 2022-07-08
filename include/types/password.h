@@ -3,6 +3,12 @@
 
 #include <string.h>
 #include <stdbool.h>
+#ifdef NO_GETTEXT
+#  define PASSWORD_T(T) T
+#else
+#  include <libintl.h>
+#  define PASSWORD_T(T) dgettext("c-types", T)
+#endif
 
 #define PASSWORD_LENGTH_LIMIT   64
 #define PASSWORD_LENGTH_MINIMUM 8
@@ -19,13 +25,13 @@ password_is_valid_str(const char _s[], const char **_opt_reason) {
     if (l<PASSWORD_LENGTH_MINIMUM) goto fail_too_short;
     return true;
  fail_null_password:
-    if (_opt_reason) *_opt_reason = "Null email";
+    if (_opt_reason) *_opt_reason = PASSWORD_T("Null password");
     return false;
  fail_too_long:
-    if (_opt_reason) *_opt_reason = "Too long";
+    if (_opt_reason) *_opt_reason = PASSWORD_T("Password too long");
     return false;
  fail_too_short:
-    if (_opt_reason) *_opt_reason = "Too short";
+    if (_opt_reason) *_opt_reason = PASSWORD_T("Password too short");
     return false;
 }
 

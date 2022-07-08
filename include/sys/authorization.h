@@ -1,7 +1,6 @@
 #ifndef SYS_AUTHORIZATION_H
 #define SYS_AUTHORIZATION_H
 
-#include "../io/slog.h"
 #include "../types/username.h"
 #include <uuid/uuid.h>
 #include <string.h>
@@ -27,9 +26,11 @@ authorization_close (void) {
 
 static inline bool
 authorization_open(const char _username[]) {
-    if (!username_parse(g_authorization, _username, NULL)) {
+    const char *reason;
+    if (!username_parse(g_authorization, _username, &reason)) {
         g_authorization->s[0] = '\0';
         g_authorization_is_root = false;
+        syslog(LOG_ERR, "%s", reason);
         return false;
     }
     g_authorization_is_root = 
