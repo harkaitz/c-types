@@ -1,12 +1,15 @@
 #ifndef TYPES_TIME_H
 #define TYPES_TIME_H
 
+#ifndef _GNU_SOURCE /* strtok_r */
+#  error "Please define _GNU_SOURCE before inclusing time_ss.h"
+#endif
+
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <str/mtext.h>
 
 #ifdef NO_GETTEXT
 #  define TIME_SS_T(T) T

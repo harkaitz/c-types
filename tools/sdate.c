@@ -1,4 +1,5 @@
-#include "../include/types/time_ss.h"
+#define _GNU_SOURCE
+#include "../types/time_ss.h"
 
 int main (int _argc, const char *_argv[]) {
     time_ss        t_ss;

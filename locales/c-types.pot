@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-08 05:07+0200\n"
+"POT-Creation-Date: 2022-07-15 16:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,70 +17,70 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: include/types/password.h:28
+#: types/password.h:28
 msgid "Null password"
 msgstr ""
 
-#: include/types/password.h:31
+#: types/password.h:31
 msgid "Password too long"
 msgstr ""
 
-#: include/types/password.h:34
+#: types/password.h:34
 msgid "Password too short"
 msgstr ""
 
-#: include/types/bool_ss.h:41
+#: types/bool_ss.h:41
 msgid "Invalid value"
 msgstr ""
 
-#: include/types/bool_ss.h:44
+#: types/bool_ss.h:44
 msgid "NULL value"
 msgstr ""
 
-#: include/types/long_ss.h:23 include/types/long_ss.h:42
+#: types/long_ss.h:23 types/long_ss.h:42
 msgid "No number"
 msgstr ""
 
-#: include/types/long_ss.h:28 include/types/long_ss.h:47
+#: types/long_ss.h:28 types/long_ss.h:47
 msgid "Invalid number"
 msgstr ""
 
-#: include/types/long_ss.h:32 include/types/long_ss.h:51
+#: types/long_ss.h:32 types/long_ss.h:51
 msgid "Out of bounds"
 msgstr ""
 
-#: include/types/time_ss.h:45
+#: types/time_ss.h:48
 msgid "Null string"
 msgstr ""
 
-#: include/types/time_ss.h:53
+#: types/time_ss.h:56
 msgid "Missing year, shall be YYYY-MM-DD"
 msgstr ""
 
-#: include/types/time_ss.h:54
+#: types/time_ss.h:57
 msgid "Missing month, shall be YYYY-MM-DD"
 msgstr ""
 
-#: include/types/time_ss.h:55
+#: types/time_ss.h:58
 msgid "Missing day, shall be YYYY-MM-DD"
 msgstr ""
 
-#: include/types/time_ss.h:60
+#: types/time_ss.h:63
 msgid "Invalid year"
 msgstr ""
 
-#: include/types/time_ss.h:61
+#: types/time_ss.h:64
 msgid "Invalid month"
 msgstr ""
 
-#: include/types/time_ss.h:62
+#: types/time_ss.h:65
 msgid "Invalid day"
 msgstr ""
 
-#: include/types/username.h:23
+#: types/username.h:23
 msgid "No username"
 msgstr ""
 
-#: include/types/username.h:38
+#: types/username.h:38
 msgid "Invalid username"
 msgstr ""

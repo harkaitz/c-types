@@ -30,7 +30,7 @@ username_is_valid_str (const char _s[], const char **_opt_reason) {
             goto invalid_username;
         }
     }
-    if (i<8) {
+    if (i<4) {
         goto invalid_username;
     }
     return true;
