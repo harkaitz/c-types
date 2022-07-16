@@ -28,17 +28,21 @@ install: $(PROGRAMS) $(HEADERS)
 clean:
 	rm -f $(PROGRAMS)
 ## -- manpages --
+ifneq ($(PREFIX),)
 MAN_3=./doc/email.3 ./doc/password.3 ./doc/uuid_ss.3 ./doc/bool_ss.3 ./doc/long_ss.3 ./doc/time_ss.3 
 install: install-man3
 install-man3: $(MAN_3)
 	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man3
 	cp $(MAN_3) $(DESTDIR)$(PREFIX)/share/man/man3
+endif
 ## -- manpages --
 ## -- license --
+ifneq ($(PREFIX),)
 install: install-license
 install-license: LICENSE
 	mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-types
 	cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-types
+endif
 ## -- license --
 ## -- gettext --
 ifneq ($(PREFIX),)
