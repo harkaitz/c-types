@@ -48,31 +48,31 @@ msgstr "Numero invalido"
 msgid "Out of bounds"
 msgstr "Fuera de limites"
 
-#: types/time_ss.h:48
+#: types/time_ss.h:44
 msgid "Null string"
 msgstr "Null string"
 
-#: types/time_ss.h:56
+#: types/time_ss.h:52
 msgid "Missing year, shall be YYYY-MM-DD"
 msgstr "Falta el año, AAAA-MM-DD"
 
-#: types/time_ss.h:57
+#: types/time_ss.h:53
 msgid "Missing month, shall be YYYY-MM-DD"
 msgstr "Falta el mes, AAAA/MM/DD."
 
-#: types/time_ss.h:58
+#: types/time_ss.h:54
 msgid "Missing day, shall be YYYY-MM-DD"
 msgstr "Falta el día, AAAA/MM/DD"
 
-#: types/time_ss.h:63
+#: types/time_ss.h:59
 msgid "Invalid year"
 msgstr "Año invalido"
 
-#: types/time_ss.h:64
+#: types/time_ss.h:60
 msgid "Invalid month"
 msgstr "Mes invalido."
 
-#: types/time_ss.h:65
+#: types/time_ss.h:61
 msgid "Invalid day"
 msgstr "Dia invalido."
 

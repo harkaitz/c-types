@@ -16,7 +16,8 @@ HEADERS     =        \
     types/uuid_ss.h  \
     types/email.h    \
     types/password.h \
-    types/username.h
+    types/username.h \
+    types/lstack.h
 all: $(PROGRAMS)
 tools/%: tools/%.c $(HEADERS)
 	$(CC) -o $@ $< $(CFLAGS_ALL) $(LIBS)
