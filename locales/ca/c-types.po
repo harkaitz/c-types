@@ -1,4 +1,4 @@
-# Spanish translations for PACKAGE package.
+# Catalan translations for PACKAGE package.
 # Copyright (C) 2022 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Automatically generated, 2022.
@@ -7,30 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2022-07-08 04:15+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
-"Language: es\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: types/password.h:28
 msgid "Null password"
-msgstr "Contraseña Null"
+msgstr "Contrasenya nulla"
 
 #: types/password.h:31
 msgid "Password too long"
-msgstr "Contraseña demasiado larga"
+msgstr "La contrasenya és massa llarga"
 
 #: types/password.h:34
 msgid "Password too short"
-msgstr "Contraseña demasiado corta"
+msgstr "La contrasenya és massa curta"
 
 #: types/bool_ss.h:41
 msgid "Invalid value"
-msgstr "Valor invalido"
+msgstr "Valor no vàlid"
 
 #: types/bool_ss.h:44
 msgid "NULL value"
@@ -38,24 +37,24 @@ msgstr "Valor NULL"
 
 #: types/long_ss.h:23 types/long_ss.h:42
 msgid "No number"
-msgstr "Sin numero"
+msgstr "Sense número"
 
 #: types/long_ss.h:28 types/long_ss.h:47
 msgid "Invalid number"
-msgstr "Numero invalido"
+msgstr "Número no vàlid"
 
 #: types/long_ss.h:32 types/long_ss.h:51
 msgid "Out of bounds"
-msgstr "Fuera de limites"
+msgstr "Fora dels límits"
 
 #: types/time_ss.h:50
 msgid "Invalid time format."
-msgstr ""
+msgstr "Format d'hora no vàlid."
 
 #: types/username.h:23
 msgid "No username"
-msgstr "Sin usuario"
+msgstr "Sense nom d'usuari"
 
 #: types/username.h:38
 msgid "Invalid username"
-msgstr "Usuario invalido"
+msgstr "Nom d'usuari no vàlid"

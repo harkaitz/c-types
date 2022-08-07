@@ -48,32 +48,8 @@ msgstr ""
 msgid "Out of bounds"
 msgstr ""
 
-#: types/time_ss.h:44
-msgid "Null string"
-msgstr ""
-
-#: types/time_ss.h:52
-msgid "Missing year, shall be YYYY-MM-DD"
-msgstr ""
-
-#: types/time_ss.h:53
-msgid "Missing month, shall be YYYY-MM-DD"
-msgstr ""
-
-#: types/time_ss.h:54
-msgid "Missing day, shall be YYYY-MM-DD"
-msgstr ""
-
-#: types/time_ss.h:59
-msgid "Invalid year"
-msgstr ""
-
-#: types/time_ss.h:60
-msgid "Invalid month"
-msgstr ""
-
-#: types/time_ss.h:61
-msgid "Invalid day"
+#: types/time_ss.h:50
+msgid "Invalid time format."
 msgstr ""
 
 #: types/username.h:23

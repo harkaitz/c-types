@@ -47,33 +47,9 @@ msgstr "Zenbaki txarra"
 msgid "Out of bounds"
 msgstr "Limitez kanpo"
 
-#: types/time_ss.h:44
-msgid "Null string"
-msgstr "Null string"
-
-#: types/time_ss.h:52
-msgid "Missing year, shall be YYYY-MM-DD"
-msgstr "Urtea falta da, UUUU-II-EE"
-
-#: types/time_ss.h:53
-msgid "Missing month, shall be YYYY-MM-DD"
-msgstr "Hilabetea falta da, UUUU/II/EE."
-
-#: types/time_ss.h:54
-msgid "Missing day, shall be YYYY-MM-DD"
-msgstr "Eguna falta da, UUUU/II/EE"
-
-#: types/time_ss.h:59
-msgid "Invalid year"
-msgstr "Urte txarra"
-
-#: types/time_ss.h:60
-msgid "Invalid month"
-msgstr "Hilabete txarra."
-
-#: types/time_ss.h:61
-msgid "Invalid day"
-msgstr "Egun txarra."
+#: types/time_ss.h:50
+msgid "Invalid time format."
+msgstr ""
 
 #: types/username.h:23
 msgid "No username"

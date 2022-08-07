@@ -1,4 +1,4 @@
-#include "../include/types/email.h"
+#include "../types/email.h"
 #include <libgen.h>
 #include <stdio.h>
 
