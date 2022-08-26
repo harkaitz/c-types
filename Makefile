@@ -8,8 +8,9 @@ CFLAGS_ALL  =$(LDFLAGS) $(CFLAGS) $(CPPFLAGS)
 PROGRAMS    =                  \
     tools/sdate$(EXE)          \
     tools/valid-email$(EXE)    \
-    tools/valid-password$(EXE)
-HEADERS     =        \
+    tools/valid-password$(EXE) \
+    tools/valid-dni$(EXE)
+HEADERS1=            \
     types/bool_ss.h  \
     types/long_ss.h  \
     types/time_ss.h  \
@@ -18,14 +19,19 @@ HEADERS     =        \
     types/password.h \
     types/username.h \
     types/lstack.h
+HEADERS2=            \
+    types/spain/dni.h
+
+HEADERS=$(HEADERS1) $(HEADERS2)
 all: $(PROGRAMS)
 tools/%: tools/%.c $(HEADERS)
 	$(CC) -o $@ $< $(CFLAGS_ALL) $(LIBS)
 install: $(PROGRAMS) $(HEADERS)
 	install -d                $(DESTDIR)$(PREFIX)/bin
 	install -m755 $(PROGRAMS) $(DESTDIR)$(PREFIX)/bin
-	install -d                $(DESTDIR)$(PREFIX)/include/types
-	install -m644 $(HEADERS)  $(DESTDIR)$(PREFIX)/include/types
+	install -d                $(DESTDIR)$(PREFIX)/include/types/spain
+	install -m644 $(HEADERS1) $(DESTDIR)$(PREFIX)/include/types
+	install -m644 $(HEADERS2) $(DESTDIR)$(PREFIX)/include/types/spain
 clean:
 	rm -f $(PROGRAMS)
 ## -- manpages --
@@ -41,21 +47,26 @@ endif
 ifneq ($(PREFIX),)
 install: install-license
 install-license: LICENSE
-	mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-types
-	cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-types
+	@echo 'I share/doc/c-types/LICENSE'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-types
+	@cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-types
 endif
 ## -- license --
 ## -- gettext --
 ifneq ($(PREFIX),)
 install: install-po
 install-po:
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	cp locales/es/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	cp locales/eu/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	cp locales/ca/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	mkdir -p $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
-	cp locales/gl/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
+	@echo 'I share/locale/es/LC_MESSAGES/c-types.mo'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
+	@cp locales/es/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
+	@echo 'I share/locale/eu/LC_MESSAGES/c-types.mo'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
+	@cp locales/eu/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
+	@echo 'I share/locale/ca/LC_MESSAGES/c-types.mo'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
+	@cp locales/ca/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
+	@echo 'I share/locale/gl/LC_MESSAGES/c-types.mo'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
+	@cp locales/gl/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
 endif
 ## -- gettext --
