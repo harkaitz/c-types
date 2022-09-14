@@ -11,3 +11,4 @@ deps.log
 tools/freplace
 tools/phash
 tools/valid-dni
+tools/random-dni

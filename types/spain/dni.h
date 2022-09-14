@@ -36,6 +36,14 @@ dni_parse(dni_t *_dni, char const *_s)
     return true;
 }
 
+static inline void
+dni_random(dni_t *_dni)
+{
+    _dni->num = (rand())%100000000;
+    _dni->chr = DNI_CHARS[_dni->num % 23];
+    _dni->valid = true;
+}
+
 static inline int
 dni_fputs(dni_t _dni, FILE *_fp)
 {
