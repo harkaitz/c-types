@@ -54,13 +54,22 @@ install-po:
 endif
 ## -- gettext --
 ## -- manpages --
-ifneq ($(PREFIX),)
-MAN_3=./doc/email.3 ./doc/password.3 ./doc/uuid_ss.3 ./doc/bool_ss.3 ./doc/long_ss.3 ./doc/time_ss.3 
 install: install-man3
-install-man3: $(MAN_3)
-	mkdir -p $(DESTDIR)$(PREFIX)/share/man/man3
-	cp $(MAN_3) $(DESTDIR)$(PREFIX)/share/man/man3
-endif
+install-man3:
+	@echo 'I share/man/man3/'
+	@mkdir -p $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/email.3'
+	@cp ./doc/email.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/password.3'
+	@cp ./doc/password.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/uuid_ss.3'
+	@cp ./doc/uuid_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/bool_ss.3'
+	@cp ./doc/bool_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/long_ss.3'
+	@cp ./doc/long_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/time_ss.3'
+	@cp ./doc/time_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
 ## -- manpages --
 ## -- license --
 ifneq ($(PREFIX),)
