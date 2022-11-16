@@ -41,21 +41,29 @@ clean:
 	@echo "D $(PROGRAMS)"
 	@rm -f $(PROGRAMS)
 ## -- gettext --
-ifneq ($(PREFIX),)
+update: u-locales
+u-locales:
+	@auto-gettext update
+DISABLE_GETTEXT=$(shell which msgfmt >/dev/null 2>&1 || echo y)
+ifeq ($(DISABLE_GETTEXT),)
 install: install-po
 install-po:
-	@echo 'I share/locale/es/LC_MESSAGES/c-types.mo'
+	@echo 'MO share/locale/es/LC_MESSAGES/c-types.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	@cp locales/es/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES
-	@echo 'I share/locale/eu/LC_MESSAGES/c-types.mo'
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES/c-types.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/es/LC_MESSAGES/c-types.mo ./locales/es/c-types.po
+	@echo 'MO share/locale/eu/LC_MESSAGES/c-types.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	@cp locales/eu/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES
-	@echo 'I share/locale/ca/LC_MESSAGES/c-types.mo'
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES/c-types.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/eu/LC_MESSAGES/c-types.mo ./locales/eu/c-types.po
+	@echo 'MO share/locale/ca/LC_MESSAGES/c-types.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	@cp locales/ca/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES
-	@echo 'I share/locale/gl/LC_MESSAGES/c-types.mo'
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES/c-types.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/ca/LC_MESSAGES/c-types.mo ./locales/ca/c-types.po
+	@echo 'MO share/locale/gl/LC_MESSAGES/c-types.mo'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
-	@cp locales/gl/LC_MESSAGES/c-types.mo $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES
+	@rm -f $(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES/c-types.mo
+	@msgfmt --output-file=$(DESTDIR)$(PREFIX)/share/locale/gl/LC_MESSAGES/c-types.mo ./locales/gl/c-types.po
 endif
 ## -- gettext --
 ## -- manpages --
@@ -63,25 +71,23 @@ install: install-man3
 install-man3:
 	@echo 'I share/man/man3/'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/bool_ss.3'
+	@cp ./doc/bool_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/time_ss.3'
+	@cp ./doc/time_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/uuid_ss.3'
+	@cp ./doc/uuid_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
+	@echo 'I share/man/man3/long_ss.3'
+	@cp ./doc/long_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
 	@echo 'I share/man/man3/email.3'
 	@cp ./doc/email.3 $(DESTDIR)$(PREFIX)/share/man/man3
 	@echo 'I share/man/man3/password.3'
 	@cp ./doc/password.3 $(DESTDIR)$(PREFIX)/share/man/man3
-	@echo 'I share/man/man3/uuid_ss.3'
-	@cp ./doc/uuid_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
-	@echo 'I share/man/man3/bool_ss.3'
-	@cp ./doc/bool_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
-	@echo 'I share/man/man3/long_ss.3'
-	@cp ./doc/long_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
-	@echo 'I share/man/man3/time_ss.3'
-	@cp ./doc/time_ss.3 $(DESTDIR)$(PREFIX)/share/man/man3
 ## -- manpages --
 ## -- license --
-ifneq ($(PREFIX),)
 install: install-license
 install-license: LICENSE
 	@echo 'I share/doc/c-types/LICENSE'
 	@mkdir -p $(DESTDIR)$(PREFIX)/share/doc/c-types
 	@cp LICENSE $(DESTDIR)$(PREFIX)/share/doc/c-types
-endif
 ## -- license --
