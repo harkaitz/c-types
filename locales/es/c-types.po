@@ -50,7 +50,7 @@ msgstr "Fuera de limites"
 
 #: types/time_ss.h:50
 msgid "Invalid time format."
-msgstr ""
+msgstr "Formato incorrecto."
 
 #: types/username.h:23
 msgid "No username"

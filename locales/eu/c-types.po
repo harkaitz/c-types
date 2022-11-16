@@ -49,7 +49,7 @@ msgstr "Limitez kanpo"
 
 #: types/time_ss.h:50
 msgid "Invalid time format."
-msgstr ""
+msgstr "Fetxa formatua gaizki dago"
 
 #: types/username.h:23
 msgid "No username"
