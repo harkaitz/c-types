@@ -28,13 +28,17 @@ all: $(PROGRAMS)
 tools/%: tools/%.c $(HEADERS)
 	$(CC) -o $@ $< $(CFLAGS_ALL) $(LIBS)
 install: $(PROGRAMS) $(HEADERS)
-	install -d                $(DESTDIR)$(PREFIX)/bin
-	install -m755 $(PROGRAMS) $(DESTDIR)$(PREFIX)/bin
-	install -d                $(DESTDIR)$(PREFIX)/include/types/spain
-	install -m644 $(HEADERS1) $(DESTDIR)$(PREFIX)/include/types
-	install -m644 $(HEADERS2) $(DESTDIR)$(PREFIX)/include/types/spain
+	@echo "I bin/ $(PROGRAMS)"
+	@install -d                $(DESTDIR)$(PREFIX)/bin
+	@install -m755 $(PROGRAMS) $(DESTDIR)$(PREFIX)/bin
+	@echo "I include/types/ $(HEADERS1)"
+	@install -d                $(DESTDIR)$(PREFIX)/include/types/spain
+	@install -m644 $(HEADERS1) $(DESTDIR)$(PREFIX)/include/types
+	@echo "I include/types/spain/ $(HEADERS2)"
+	@install -m644 $(HEADERS2) $(DESTDIR)$(PREFIX)/include/types/spain
 clean:
-	rm -f $(PROGRAMS)
+	@echo "D $(PROGRAMS)"
+	@rm -f $(PROGRAMS)
 ## -- gettext --
 ifneq ($(PREFIX),)
 install: install-po
