@@ -26,7 +26,8 @@ HEADERS2=            \
 HEADERS=$(HEADERS1) $(HEADERS2)
 all: $(PROGRAMS)
 tools/%: tools/%.c $(HEADERS)
-	$(CC) -o $@ $< $(CFLAGS_ALL) $(LIBS)
+	@echo "B $@ $<"
+	@$(CC) -o $@ $< $(CFLAGS_ALL) $(LIBS)
 install: $(PROGRAMS) $(HEADERS)
 	@echo "I bin/ $(PROGRAMS)"
 	@install -d                $(DESTDIR)$(PREFIX)/bin
