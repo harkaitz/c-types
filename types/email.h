@@ -99,7 +99,7 @@ email_str(const email *_e) {
  * MIT License
  * 
  * Bug reports, feature requests to gemini|https://harkadev.com/oss
- * Copyright (c) 2022 Harkaitz Agirre, harkaitz.aguirre@gmail.com
+ * Copyright (c) 2023 Harkaitz Agirre, harkaitz.aguirre@gmail.com
  * 
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
