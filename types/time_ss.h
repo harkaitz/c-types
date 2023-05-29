@@ -8,13 +8,6 @@
 #include <stdbool.h>
 #include <locale.h>
 
-#ifdef NO_GETTEXT
-#  define TIME_SS_T(T) T
-#else
-#  include <libintl.h>
-#  define TIME_SS_T(T) dgettext("c-types", T)
-#endif
-
 typedef struct time_ss {
     char s[32];
 } time_ss;
@@ -47,7 +40,7 @@ time_day_parse(time_t *_t, const char _s[], const char **_reason)
         *_t = mktime(&tm);
         return true;
     } else if (_reason) {
-        *_reason = TIME_SS_T("Invalid time format.");
+        *_reason = "Invalid time format.";
         return false;
     } else {
         return false;

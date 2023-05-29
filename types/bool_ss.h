@@ -3,14 +3,6 @@
 
 #include <string.h>
 #include <stdbool.h>
-#ifdef NO_GETTEXT
-#  define BOOL_T(T) T
-#else
-#  include <libintl.h>
-#  define BOOL_T(T) dgettext("c-types", T)
-#endif
-
-
 
 __attribute__((weak))
 const char *g_true_values[] = {
@@ -38,10 +30,10 @@ bool_parse (bool *_opt_out, const char *_in, const char **_opt_reason) {
     }
     goto fail_invalid_value;
  fail_invalid_value:
-    if (_opt_reason) *_opt_reason = BOOL_T("Invalid value");
+    if (_opt_reason) *_opt_reason = "Invalid value";
     return false;
  fail_null_value:
-    if (_opt_reason) *_opt_reason = BOOL_T("NULL value");
+    if (_opt_reason) *_opt_reason = "NULL value";
     return false;
 }
 

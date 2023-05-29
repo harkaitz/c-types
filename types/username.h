@@ -1,17 +1,8 @@
 #ifndef TYPES_USERNAME_H
 #define TYPES_USERNAME_H
 
-
 #include <stdbool.h>
 #include <string.h>
-
-#ifdef NO_GETTEXT
-#  define USERNAME_T(T) (T)
-#else
-#  include <libintl.h>
-#  define USERNAME_T(T) dgettext("c-types", T)
-#endif
-
 
 typedef struct username username;
 struct username { char s[64]; };
@@ -20,7 +11,7 @@ static __attribute__((unused)) bool
 username_is_valid_str (const char _s[], const char **_opt_reason) {
     size_t i;
     if (!_s || !_s[0]) {
-        if (_opt_reason) *_opt_reason = USERNAME_T("No username");
+        if (_opt_reason) *_opt_reason = "No username";
         return false;
     }
     for (i=0; _s[i]; i++) {
@@ -35,7 +26,7 @@ username_is_valid_str (const char _s[], const char **_opt_reason) {
     }
     return true;
  invalid_username:
-    if (_opt_reason) *_opt_reason = USERNAME_T("Invalid username");
+    if (_opt_reason) *_opt_reason = "Invalid username";
     return false;
 }
 
